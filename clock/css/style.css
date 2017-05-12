@@ -1,0 +1,25 @@
+body {
+  background-color: #fa6;
+}
+
+#clock-face {
+  width: 300px;
+  height: 300px;
+  border-radius: 150px;
+  border: 8px solid #fff;
+  position: relative;
+}
+
+.test {
+  transform: rotate(5deg);
+}
+
+.hand {
+  width:50%;
+  height: 6px;
+  background: #fff;
+  top: 50%;
+  position: absolute;
+  transform-origin: 100%;
+  transform: rotate(90deg);
+}
