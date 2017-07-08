@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Test</title>
+  </head>
+  <body>
+
+    <script>
+    function pick(obj,...keys) {
+      let result = Object.create(null);
+      keys.forEach( key => result[key] = obj[key]);
+        return result;
+    }
+
+    let person = {
+      name: 'Venkat',
+      age: 43,
+      job: 'Software Developer'
+    };
+
+    console.log( pick(person, "age") );
+
+    </script>
+  </body>
+</html>

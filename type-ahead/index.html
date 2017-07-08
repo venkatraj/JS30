@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Type Ahead 👀</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="City or State">
+    <ul class="suggestions">
+      <li>Filter for a city</li>
+      <li>or a state</li>
+    </ul>
+  </form>
+<script>
+window.onload = function() {
+  AutoComplete.init();
+}
+
+const AutoComplete = {
+  endpoint: '',
+  cities: [],
+  search: null,
+  suggestions: null,
+  init() {
+    this.endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+    this.cities = this.getData();
+    this.search = document.querySelector('.search');
+    this.suggestions = document.querySelector('.suggestions');
+    this.search.addEventListener('change', this.displayMatches.bind(this));
+    this.search.addEventListener('keyup', this.displayMatches.bind(this));
+  },
+
+  getData() {
+    const  result = [];
+    fetch(this.endpoint)
+      .then(function(response){
+        return response.json();
+      })
+      .then(function(data){
+        result.push(...data);
+      });
+      return result;
+  },
+
+  findMatches(wordToMatch) {
+    return this.cities.filter(place => {
+      const regex = new RegExp(wordToMatch, 'gi');
+      return place.city.match(regex) || place.state.match(regex);
+    })
+  },
+
+  numberWithCommas(number) {
+      return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  },
+
+  displayMatches(e) {
+    const matches = this.findMatches(this.search.value);
+
+    const matchedCities = matches.map(place => {
+      const regex = new RegExp(this.search.value, 'gi');
+      const city = place.city.replace(regex, `<span class="hl">${this.search.value}</span>`);
+      const state = place.state.replace(regex, `<span class="hl">${this.search.value}</span>`);
+      const population = this.numberWithCommas(place.population);
+      return `<li>
+          <span class="name">${city}, ${state}</span>
+          <span class="population">${population}</span>
+      </li>`
+    }).join('');
+    this.suggestions.innerHTML = matchedCities;
+  }
+}
+</script>
+  </body>
+</html>

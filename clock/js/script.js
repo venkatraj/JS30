@@ -1,19 +1,37 @@
-let hoursHandle = document.querySelector('.hand-hours');
-let minutesHandle = document.querySelector('.hand-minutes');
-let secondsHandle = document.querySelector('.hand-seconds');
+window.onload = function() {
+  Clock.init();
+};
 
-function setTime() {
-  let date = new Date();
-  let hours = date.getHours();
-  let minutes = date.getMinutes();
-  let seconds = date.getSeconds();
+var Clock = {
+  secondsHand: null,
+  minutesHand: null,
+  hoursHand: null,
 
-  hours = date.getHours();
-  minutes = date.getMinutes();
-  seconds = date.getSeconds();
-  secondsHandle.style.transform = `rotate(${seconds*6 + 90}deg)`;
-  minutesHandle.style.transform = `rotate(${minutes*6 + 90}deg)`;
-  hoursHandle.style.transform = `rotate(${hours*30 + 90}deg)`;
-}
+  init() {
+    this.secondsHand = document.querySelector('.second-hand');
+    this.minutesHand = document.querySelector('.minute-hand');
+    this.hoursHand = document.querySelector('.hour-hand');
+    setInterval(this.setTime.bind(this), 1000);
+  },
 
-setInterval(setTime, 1000);
+  setTime() {
+    const now = new Date();
+    const seconds = now.getSeconds();
+    const secondsPosition = this.getPosition(seconds);
+    if(seconds === 0) {
+      this.secondsHand.style.transition = 'none';
+    }
+    console.log(seconds);
+    const minutes = now.getMinutes();
+    const minutesPosition = this.getPosition(minutes);
+    const hours = now.getHours();
+    const hoursPosition = this.getPosition(hours, 12);
+    this.secondsHand.style.transform = `rotate(${secondsPosition}deg)`;
+    this.minutesHand.style.transform = `rotate(${minutesPosition}deg)`;
+    this.hoursHand.style.transform = `rotate(${hoursPosition}deg)`;
+  },
+
+  getPosition(value, divider = 60) {
+    return ((value / divider) * 360) + 90;
+  }
+};
